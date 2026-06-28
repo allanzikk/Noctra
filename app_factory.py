@@ -21,13 +21,15 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
     app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)
+    app.config["JWT_COOKIE_SAMESITE"] = "None"
+    app.config["JWT_COOKIE_SECURE"] = True
     app.json.sort_keys = False
 
     jwt.init_app(app)
     bcrypt.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
-    cors.init_app(app, supports_credentials=True, origins=["http://localhost:5500"])
+    cors.init_app(app, supports_credentials=True, origins=[os.getenv("CLIENT_URL")])
 
 
 
